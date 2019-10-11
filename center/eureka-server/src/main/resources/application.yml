@@ -11,3 +11,10 @@ eureka:
 spring:
   application:
     name: eureka-server
+  kafka:
+    bootstrap-servers: 192.168.0.211:9092,192.168.0.213:9092,192.168.0.218:9092
+    consumer:
+      #标记消费者所在的组
+      group-id: java-fun
+      #消费进度保存机制
+      auto-offset-reset: earliest

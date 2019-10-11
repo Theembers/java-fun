@@ -15,9 +15,18 @@ spring:
         git:
           uri: https://github.com/Theembers/java-fun.git
           searchPaths: /env-config
+  bus:
+    refresh:
+      enabled: true
 
-#management:
-#  endpoints:
-#    web:
-#      exposure:
-#        include: '*'
+  kafka:
+    bootstrap-servers: 192.168.0.211:9092,192.168.0.213:9092,192.168.0.218:9092
+    consumer:
+      group-id: java-fun-bus
+      auto-offset-reset: earliest
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

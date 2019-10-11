@@ -14,7 +14,7 @@
     <modules>
         <module>eureka-server</module>
         <module>config-server</module>
-        <module>bus-server</module>
+        <module>config-bus-server</module>
     </modules>
 
 
