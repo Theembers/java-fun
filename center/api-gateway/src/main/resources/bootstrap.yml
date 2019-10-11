@@ -1,20 +1,32 @@
 server:
-  port: ${EUREKA_PORT:8761}
+  port: 8869
 
 eureka:
   client:
-    registerWithEureka: false
-    fetchRegistry: false
     serviceUrl:
       defaultZone: http://${EUREKA_ZONE_HOST:localhost}:${EUREKA_ZONE_PORT:8761}/eureka/
 
 spring:
   application:
-    name: eureka-server
+    name: api-gateway
+  cloud:
+    config:
+      profile: dev
+      discovery:
+        service-id: config-server
+        enabled: true
+  bus:
+    refresh:
+      enabled: true
+
   kafka:
     bootstrap-servers: 192.168.0.211:9092,192.168.0.213:9092,192.168.0.218:9092
     consumer:
-      #标记消费者所在的组
-      group-id: java-fun
-      #消费进度保存机制
+      group-id: java-fun-bus
       auto-offset-reset: earliest
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

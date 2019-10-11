@@ -1,0 +1,18 @@
+server:
+  port: ${EUREKA_PORT:8761}
+
+eureka:
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+    serviceUrl:
+      defaultZone: http://${EUREKA_ZONE_HOST:localhost}:${EUREKA_ZONE_PORT:8761}/eureka/
+
+spring:
+  application:
+    name: eureka-server
+  kafka:
+    bootstrap-servers: 192.168.0.211:9092,192.168.0.213:9092,192.168.0.218:9092
+    consumer:
+      group-id: java-fun
+      auto-offset-reset: earliest
