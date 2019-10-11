@@ -19,6 +19,7 @@
     <modules>
 
         <module>center</module>
+        <module>server</module>
     </modules>
 
     <dependencyManagement>

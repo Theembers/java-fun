@@ -7,6 +7,8 @@ eureka:
     fetchRegistry: false
     serviceUrl:
       defaultZone: http://${EUREKA_ZONE_HOST:localhost}:${EUREKA_ZONE_PORT:8761}/eureka/
+  server:
+    enable-self-preservation: false
 
 spring:
   application:
