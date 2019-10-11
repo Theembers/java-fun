@@ -5,7 +5,7 @@ eureka:
   instance:
     lease-expiration-duration-in-seconds: 30 #续约到期时间(默认90秒)
     lease-renewal-interval-in-seconds: 10 #续约更新时间间隔(默认30秒)
-
+---
 spring:
   profiles: kafka
   kafka:
