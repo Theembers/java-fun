@@ -1,14 +1,16 @@
 server:
   port: 8869
 
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://${EUREKA_ZONE_HOST:localhost}:${EUREKA_ZONE_PORT:8761}/eureka/
+#eureka:
+#  client:
+#    serviceUrl:
+#      defaultZone: http://${EUREKA_ZONE_HOST:localhost}:${EUREKA_ZONE_PORT:8761}/eureka/
 
 spring:
   application:
     name: api-gateway
+  profiles:
+    active: common
   cloud:
     config:
       profile: dev
@@ -21,9 +23,6 @@ spring:
 
   kafka:
     bootstrap-servers: 192.168.0.211:9092,192.168.0.213:9092,192.168.0.218:9092
-    consumer:
-      group-id: java-fun-bus
-      auto-offset-reset: earliest
 
 management:
   endpoints:
