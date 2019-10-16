@@ -61,28 +61,29 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-config</artifactId>
         </dependency>
+        <!--日志跟踪-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.cloud</groupId>-->
+        <!--            <artifactId>spring-cloud-starter-zipkin</artifactId>-->
+        <!--        </dependency>-->
 
         <!--集群监控消息队列-->
         <!--        <dependency>-->
         <!--            <groupId>org.springframework.cloud</groupId>-->
         <!--            <artifactId>spring-cloud-netflix-hystrix-stream</artifactId>-->
         <!--        </dependency>-->
-        <!--日志跟踪-->
-        <!--        <dependency>-->
-        <!--            <groupId>org.springframework.cloud</groupId>-->
-        <!--            <artifactId>spring-cloud-starter-zipkin</artifactId>-->
-        <!--        </dependency>-->
+
         <!--消息总线rebbitmq-->
-        <!--        <dependency>-->
-        <!--            <groupId>org.springframework.cloud</groupId>-->
-        <!--            <artifactId>spring-cloud-starter-bus-amqp</artifactId>-->
-        <!--        </dependency>-->
+        <!--                <dependency>-->
+        <!--                    <groupId>org.springframework.cloud</groupId>-->
+        <!--                    <artifactId>spring-cloud-starter-bus-amqp</artifactId>-->
+        <!--                </dependency>-->
 
         <!--消息总线kafka-->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.cloud</groupId>-->
-<!--            <artifactId>spring-cloud-starter-stream-kafka</artifactId>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.cloud</groupId>-->
+        <!--            <artifactId>spring-cloud-starter-stream-kafka</artifactId>-->
+        <!--        </dependency>-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-bus-kafka</artifactId>

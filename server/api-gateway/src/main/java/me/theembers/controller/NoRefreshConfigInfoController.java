@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(value = "no-refreshed-config")
-public class NoRefreshConfigController {
+public class NoRefreshConfigInfoController {
 
     @Value("${api-version}")
     private String apiVersion;
