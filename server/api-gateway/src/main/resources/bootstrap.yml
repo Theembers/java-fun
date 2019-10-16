@@ -4,7 +4,7 @@ spring:
   application:
     name: api-gateway
   profiles:
-    active: common,kafka
+    active: common
   cloud:
     config:
       profile: dev
@@ -12,7 +12,7 @@ spring:
         service-id: config-server
         enabled: true
   kafka:
-    bootstrap-servers: 192.168.0.211:9092,192.168.0.213:9092,192.168.0.218:9092
+    bootstrap-servers: 192.168.0.225:9092,192.168.0.226:9092,192.168.0.227:9092
 management:
   endpoints:
     web:
