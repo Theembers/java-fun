@@ -20,6 +20,7 @@
         <module>center</module>
         <module>server</module>
         <module>lab</module>
+        <module>spark</module>
     </modules>
 
     <dependencyManagement>
