@@ -21,15 +21,15 @@ public abstract class AbstractAntMinStack<E> implements AntMinStack<E> {
      * 抽象比较器，需要个具体栈自行实现比较：
      * 约定：source 小于等于 target 则 返回 true （必须包含等于，如果没有等于，连续相同的最小值后出栈会有问题）
      *
-     * @param target
-     * @param source
+     * @param target 比较值
+     * @param source 当前值
      * @return
      */
     abstract boolean compareLessThan(E target, E source) throws RuntimeException;
 
 
     /**
-     * push 放入元素
+     * push 元素入栈
      *
      * @param data
      */
@@ -49,7 +49,7 @@ public abstract class AbstractAntMinStack<E> implements AntMinStack<E> {
     }
 
     /**
-     * pop 推出元素
+     * pop 元素出栈
      *
      * @return
      */
@@ -63,7 +63,7 @@ public abstract class AbstractAntMinStack<E> implements AntMinStack<E> {
     }
 
     /**
-     * min 最小函数，调用该函数，可直接返回当前AntMinStack的栈的最小值
+     * min 最小函数
      *
      * @return
      * @throws Exception
