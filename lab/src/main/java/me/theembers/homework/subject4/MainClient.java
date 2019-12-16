@@ -14,7 +14,7 @@ public class MainClient {
     private static final ExecutorService EXECUTOR_SERVICE = Executors.newFixedThreadPool(10);
 
     public static void main(String[] args) {
-        // 加载数据
+        // 加载数据（我的电脑相对路径读取会异常，所以只能写这个绝对路径）
         String dirPath = "/Users/theembers/workspace/Java/java-fun/lab/src/main/resources/data/";
         File dirFile = new File(dirPath);
         File[] files = dirFile.listFiles();
