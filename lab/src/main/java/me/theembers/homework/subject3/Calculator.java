@@ -48,7 +48,7 @@ public class Calculator {
         // 数值栈，数值以BigDecimal存储计算，避免精度计算问题
         Stack<BigDecimal> numStack = new Stack<>();
         // 当前正在读取中的数值字符追加器
-        StringBuilder curNumBuilder = new StringBuilder(16);
+        StringBuilder curNumBuilder = new StringBuilder();
 
         // 逐个读取字符，并根据运算符判断参与何种计算
         for (int i = 0; i < expression.length(); i++) {
@@ -61,6 +61,7 @@ public class Calculator {
                 } else {
                     if (curNumBuilder.length() > 0) {
                         // 如果追加器有值，说明之前读取的字符是数值，而且此时已经完整读取完一个数值
+                        //
                         numStack.push(new BigDecimal(curNumBuilder.toString()));
                         curNumBuilder.delete(0, curNumBuilder.length());
                     }
@@ -209,28 +210,9 @@ public class Calculator {
      * @param value2
      * @return
      */
-
-
-    private static boolean isDoubleEquals(double value1, double value2) {
+    public static boolean isDoubleEquals(double value1, double value2) {
         System.out.println("正确结果=" + value1 + ", 实际计算结果=" + value2);
         return Math.abs(value1 - value2) <= 0.0001;
     }
-
-
-    public static void main(String[] args) {
-        // 几个测试数据
-        System.out.println(isDoubleEquals(20, executeExpression("3*0+3+8+9*1")));
-        System.out.println(isDoubleEquals(9, executeExpression("3+(3-0)*2")));
-//        System.out.println(isDoubleEquals(372.8, executeExpression(" 9.2 *(20-1)-1+199 = ")));
-//        System.out.println(isDoubleEquals(372.8, executeExpression(" 9.2 *(20-1)-1+199 ")));
-//        System.out.println(isDoubleEquals(372.8, executeExpression(" 9.2 *(20-1)-1+199")));
-//        System.out.println(isDoubleEquals(-29, executeExpression(" 9 *(20-1)-(1+199) ")));
-//        System.out.println(isDoubleEquals(1.0E24, executeExpression("1000000000000*1000000000000 = ")));
-    }
-
-
-    private Calculator() {
-    }
-
 }
 
