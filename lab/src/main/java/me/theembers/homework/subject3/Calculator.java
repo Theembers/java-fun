@@ -43,57 +43,51 @@ public class Calculator {
         if (!matcher.matches()) {
             throw new IllegalArgumentException("表达式含有非法字符！");
         }
+
         // 运算符栈
         Stack<String> optStack = new Stack<>();
-        // 数值栈，数值以BigDecimal存储计算，避免精度计算问题
+        // 数值栈
         Stack<BigDecimal> numStack = new Stack<>();
-        // 当前正在读取中的数值字符追加器
-        StringBuilder curNumBuilder = new StringBuilder();
+        // 当前正在读取中的数值字符缓存
+        StringBuilder curNumCache = new StringBuilder();
 
         // 逐个读取字符，并根据运算符判断参与何种计算
         for (int i = 0; i < expression.length(); i++) {
             char c = expression.charAt(i);
-            // 空白字符直接丢弃掉
-            if (c != ' ') {
-                if ((c >= '0' && c <= '9') || c == '.') {
-                    // 持续读取一个数值的各个字符
-                    curNumBuilder.append(c);
-                } else {
-                    if (curNumBuilder.length() > 0) {
-                        // 如果追加器有值，说明之前读取的字符是数值，而且此时已经完整读取完一个数值
-                        //
-                        numStack.push(new BigDecimal(curNumBuilder.toString()));
-                        curNumBuilder.delete(0, curNumBuilder.length());
-                    }
+            if (c == ' ') {
+                continue;
+            }
+            if ((c >= '0' && c <= '9') || c == '.') {
+                // 持续读取一个数值的各个字符
+                curNumCache.append(c);
+            } else {
+                if (curNumCache.length() > 0) {
+                    // 如果追加器有值，说明之前读取的字符是数值，而且此时已经完整读取完一个数值 写入 numStack
+                    numStack.push(new BigDecimal(curNumCache.toString()));
+                    // 重置数值字符缓存
+                    curNumCache.delete(0, curNumCache.length());
+                }
 
-                    String curOpt = String.valueOf(c);
-                    if (optStack.empty()) {
-                        // 运算符栈栈顶为空则直接入栈
+                String curOpt = String.valueOf(c);
+                if (optStack.empty()) {
+                    optStack.push(curOpt);
+                } else {
+                    if (curOpt.equals("(")) {
+                        // 当前运算符为左括号，直接入运算符栈
                         optStack.push(curOpt);
+                    } else if (curOpt.equals(")")) {
+                        // 当前运算符为右括号，触发括号内的字表达式进行计算
+                        directCalc(optStack, numStack, true);
                     } else {
-                        if (curOpt.equals("(")) {
-                            // 当前运算符为左括号，直接入运算符栈
-                            optStack.push(curOpt);
-                        } else if (curOpt.equals(")")) {
-                            // 当前运算符为右括号，触发括号内的字表达式进行计算
-                            directCalc(optStack, numStack, true);
-                        } else if (curOpt.equals("=")) {
-                            // 当前运算符为等号，触发整个表达式剩余计算，并返回总的计算结果
-                            directCalc(optStack, numStack, false);
-                            return numStack.pop().doubleValue();
-                        } else {
-                            // 当前运算符为加减乘除之一，要与栈顶运算符比较，判断是否要进行一次二元计算
-                            compareAndCalc(optStack, numStack, curOpt);
-                        }
+                        // 当前运算符为加减乘除之一，要与栈顶运算符比较，判断是否要进行一次二元计算
+                        compareAndCalc(optStack, numStack, curOpt);
                     }
                 }
             }
         }
-
-        // 表达式不是以等号结尾的场景
-        if (curNumBuilder.length() > 0) {
-            // 如果追加器有值，说明之前读取的字符是数值，而且此时已经完整读取完一个数值
-            numStack.push(new BigDecimal(curNumBuilder.toString()));
+        if (curNumCache.length() > 0) {
+            // 如果数值字符缓存有值，说明之前读取的字符是数值，而且此时已经完整读取完一个数值
+            numStack.push(new BigDecimal(curNumCache.toString()));
         }
         directCalc(optStack, numStack, false);
         return numStack.pop().doubleValue();
@@ -105,30 +99,30 @@ public class Calculator {
      *
      * @param optStack 运算符栈
      * @param numStack 数值栈
-     * @param curOpt   当前运算符
+     * @param theOpt   当前运算符
      */
-    public static void compareAndCalc(Stack<String> optStack, Stack<BigDecimal> numStack,String curOpt) {
+    private static void compareAndCalc(Stack<String> optStack, Stack<BigDecimal> numStack, String theOpt) {
         // 比较当前运算符和栈顶运算符的优先级
         String peekOpt = optStack.peek();
-        int priority = getPriority(peekOpt, curOpt);
+        int priority = checkPriority(peekOpt, theOpt);
         if (priority == -1 || priority == 0) {
             // 栈顶运算符优先级大或同级，触发一次二元运算
             String opt = optStack.pop(); // 当前参与计算运算符
             BigDecimal num2 = numStack.pop(); // 当前参与计算数值2
             BigDecimal num1 = numStack.pop(); // 当前参与计算数值1
-            BigDecimal bigDecimal = floatingPointCalc(opt, num1, num2);
+            BigDecimal bigDecimal = doCalc(opt, num1, num2);
 
             // 计算结果当做操作数入栈
             numStack.push(bigDecimal);
             // 运算完栈顶还有运算符，则还需要再次触发一次比较判断是否需要再次二元计算
             if (optStack.empty()) {
-                optStack.push(curOpt);
+                optStack.push(theOpt);
             } else {
-                compareAndCalc(optStack, numStack, curOpt);
+                compareAndCalc(optStack, numStack, theOpt);
             }
         } else {
             // 当前运算符优先级高，则直接入栈
-            optStack.push(curOpt);
+            optStack.push(theOpt);
         }
     }
 
@@ -139,11 +133,11 @@ public class Calculator {
      * @param numStack  数值栈
      * @param isBracket true表示为括号类型计算
      */
-    public static void directCalc(Stack<String> optStack, Stack<BigDecimal> numStack,boolean isBracket) {
+    private static void directCalc(Stack<String> optStack, Stack<BigDecimal> numStack, boolean isBracket) {
         String opt = optStack.pop(); // 当前参与计算运算符
         BigDecimal num2 = numStack.pop(); // 当前参与计算数值2
         BigDecimal num1 = numStack.pop(); // 当前参与计算数值1
-        BigDecimal bigDecimal = floatingPointCalc(opt, num1, num2);
+        BigDecimal bigDecimal = doCalc(opt, num1, num2);
 
         // 计算结果当做操作数入栈
         numStack.push(bigDecimal);
@@ -164,12 +158,10 @@ public class Calculator {
     }
 
     /**
-     * 不丢失精度的二元运算，支持高精度计算
+     * 执行技术
      */
-
-
-    public static BigDecimal floatingPointCalc(String opt, BigDecimal bigDecimal1,
-                                               BigDecimal bigDecimal2) {
+    private static BigDecimal doCalc(String opt, BigDecimal bigDecimal1,
+                                     BigDecimal bigDecimal2) {
         BigDecimal resultBigDecimal = new BigDecimal(0);
         switch (opt) {
             case "+":
@@ -182,7 +174,7 @@ public class Calculator {
                 resultBigDecimal = bigDecimal1.multiply(bigDecimal2);
                 break;
             case "/":
-                resultBigDecimal = bigDecimal1.divide(bigDecimal2, 10, BigDecimal.ROUND_HALF_DOWN); // 注意此处用法
+                resultBigDecimal = bigDecimal1.divide(bigDecimal2, 10, BigDecimal.ROUND_HALF_DOWN);
                 break;
             default:
                 break;
@@ -198,21 +190,9 @@ public class Calculator {
      * @param opt2
      * @return
      */
-    public static int getPriority(String opt1, String opt2) {
+    private static int checkPriority(String opt1, String opt2) {
         int priority = OPT_PRIORITY_MAP.get(opt2) - OPT_PRIORITY_MAP.get(opt1);
         return priority;
-    }
-
-    /**
-     * 浮点数相等比较函数
-     *
-     * @param value1
-     * @param value2
-     * @return
-     */
-    public static boolean isDoubleEquals(double value1, double value2) {
-        System.out.println("正确结果=" + value1 + ", 实际计算结果=" + value2);
-        return Math.abs(value1 - value2) <= 0.0001;
     }
 }
 
