@@ -158,7 +158,7 @@ public class Calculator {
     }
 
     /**
-     * 执行技术
+     * 执行计算
      */
     private static BigDecimal doCalc(String opt, BigDecimal bigDecimal1,
                                      BigDecimal bigDecimal2) {
