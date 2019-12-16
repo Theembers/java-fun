@@ -80,7 +80,7 @@ public class Calculator {
                         directCalc(optStack, numStack, true);
                     } else {
                         // 当前运算符为加减乘除之一，要与栈顶运算符比较，判断是否要进行一次二元计算
-                        compareAndCalc(optStack, numStack, curOpt);
+                        comparePriorityAndCalc(optStack, numStack, curOpt);
                     }
                 }
             }
@@ -101,7 +101,7 @@ public class Calculator {
      * @param numStack 数值栈
      * @param theOpt   当前运算符
      */
-    private static void compareAndCalc(Stack<String> optStack, Stack<BigDecimal> numStack, String theOpt) {
+    private static void comparePriorityAndCalc(Stack<String> optStack, Stack<BigDecimal> numStack, String theOpt) {
         // 比较当前运算符和栈顶运算符的优先级
         String peekOpt = optStack.peek();
         int priority = checkPriority(peekOpt, theOpt);
@@ -118,7 +118,7 @@ public class Calculator {
             if (optStack.empty()) {
                 optStack.push(theOpt);
             } else {
-                compareAndCalc(optStack, numStack, theOpt);
+                comparePriorityAndCalc(optStack, numStack, theOpt);
             }
         } else {
             // 当前运算符优先级高，则直接入栈
