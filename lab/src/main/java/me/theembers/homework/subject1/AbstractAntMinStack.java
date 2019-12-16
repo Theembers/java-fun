@@ -5,11 +5,11 @@ import java.util.Stack;
 /**
  * IAntMinStack 栈的抽象实现
  * <p>
- * 使用数组来作为栈的原生实现方案，当然直接使用 java.util.Stack 更方便，但我怕不符合出题要求 ^_^
- * <p>
  * 思路：
- * 1. 实现基本的栈功能
- * 2. 通过成员变量
+ * 1. 使用原生 stack 实现基本的 元素存储
+ * 2. 通过 minStack
+ * 记录每次 dataStack 压栈时的最小元素，如果当前元素小于 minStack 栈顶元素 则压栈 minStack
+ * 每次 dataStack 出站时  minStack 同步出栈（相同元素同步出栈）
  *
  * @param <E>
  */
@@ -35,7 +35,6 @@ public abstract class AbstractAntMinStack<E> implements IAntMinStack<E> {
      */
     @Override
     public E push(E data) {
-        // 往stack中放入元素
         dataStack.push(data);
         if (minStack.isEmpty()) {
             minStack.push(data);
