@@ -17,14 +17,11 @@ public class CyclicBarrierDemo {
 
         final CyclicBarrier barrier = new CyclicBarrier(3, new BarrierThread());
 
-
         for (int i = 0; i < 5; i++) {
             new Thread(() -> {
                 try {
                     System.out.println(Thread.currentThread().getName() + " index: " + barrier.await());
-                } catch (BrokenBarrierException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
+                } catch (BrokenBarrierException | InterruptedException e) {
                     e.printStackTrace();
                 }
                 System.out.println(Thread.currentThread().getName() + " start...");

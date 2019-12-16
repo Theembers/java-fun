@@ -28,7 +28,6 @@ public class CountDownLatchDemo {
             }
         }).start();
 
-
         new Thread(() -> {
             try {
                 if (COUNT_DOWN_LATCH.await(1, TimeUnit.SECONDS)) {
@@ -40,15 +39,11 @@ public class CountDownLatchDemo {
                 e.printStackTrace();
             }
         }).start();
-
-
         System.out.println("main thread going..");
-
     }
 
 
     private boolean bizMethod() {
-
         try {
             Thread.sleep(1000);
             COUNT_DOWN_LATCH.countDown();
