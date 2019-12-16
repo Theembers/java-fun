@@ -2,6 +2,7 @@ package me.theembers.homework.subject1;
 
 /**
  * 定义 AntMinStack 栈接口
+ *
  * @param <E>
  */
 public interface IAntMinStack<E> {
@@ -27,4 +28,11 @@ public interface IAntMinStack<E> {
      * @throws Exception
      */
     E min() throws Exception;
+
+    /**
+     * 元素判空
+     *
+     * @return
+     */
+    boolean empty();
 }
