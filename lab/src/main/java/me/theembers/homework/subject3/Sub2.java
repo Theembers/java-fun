@@ -1,4 +1,4 @@
-package me.theembers.homework.subject2;
+package me.theembers.homework.subject3;
 
 public class Sub2 {
     /**
