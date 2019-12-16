@@ -16,7 +16,7 @@ public class DemoClient {
         /**
          * integer 的例子
          */
-        IAntMinStack<Integer> integerAntMinStack = new IntegerAntMinStack();
+        AntMinStack<Integer> integerAntMinStack = new IntegerAntMinStack();
         Random random1 = new Random(17);
         for (int i = 0; i < 10; i++) {
             int item = random1.nextInt(100);
@@ -38,7 +38,7 @@ public class DemoClient {
          */
         String str = "abcdefghijklmnopqrstuvwxyz";
 
-        IAntMinStack<String> stringAntMinStack = new StringAntMinStack();
+        AntMinStack<String> stringAntMinStack = new StringAntMinStack();
         Random random2 = new Random(100);
         // 字符串长度
         int strLength = 1;

@@ -5,7 +5,7 @@ package me.theembers.homework.subject1;
  *
  * @param <E>
  */
-public interface IAntMinStack<E> {
+public interface AntMinStack<E> {
     /**
      * push 放入元素
      *

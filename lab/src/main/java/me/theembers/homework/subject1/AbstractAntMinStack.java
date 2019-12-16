@@ -7,15 +7,15 @@ import java.util.Stack;
  * <p>
  * 思路：
  * 1. 使用原生 stack 实现基本的 元素存储
- * 2. 通过 minStack
- * 记录每次 dataStack 压栈时的最小元素，如果当前元素小于 minStack 栈顶元素 则压栈 minStack
- * 每次 dataStack 出站时  minStack 同步出栈（相同元素同步出栈）
+ * 2. 通过 minElStock
+ * 记录每次 elementStock 压栈时的最小元素，如果当前元素小于 minElStock 栈顶元素 则压栈 minElStock
+ * 每次 elementStock 出站时  minElStock 同步出栈（相同元素同步出栈）
  *
  * @param <E>
  */
-public abstract class AbstractAntMinStack<E> implements IAntMinStack<E> {
-    Stack<E> dataStack = new Stack<>();
-    Stack<E> minStack = new Stack<>();
+public abstract class AbstractAntMinStack<E> implements AntMinStack<E> {
+    Stack<E> elementStock = new Stack<>();
+    Stack<E> minElStock = new Stack<>();
 
     /**
      * 抽象比较器，需要个具体栈自行实现比较：
@@ -35,14 +35,14 @@ public abstract class AbstractAntMinStack<E> implements IAntMinStack<E> {
      */
     @Override
     public E push(E data) {
-        dataStack.push(data);
-        if (minStack.isEmpty()) {
-            minStack.push(data);
+        elementStock.push(data);
+        if (minElStock.isEmpty()) {
+            minElStock.push(data);
         } else {
-            E min = minStack.peek();
+            E min = minElStock.peek();
             // 始终保持最小元素放最顶端
             if (min != null && compareLessThan(min, data)) {
-                minStack.push(data);
+                minElStock.push(data);
             }
         }
         return data;
@@ -55,9 +55,9 @@ public abstract class AbstractAntMinStack<E> implements IAntMinStack<E> {
      */
     @Override
     public E pop() {
-        E data = dataStack.pop();
-        if (data != null && !minStack.isEmpty() && minStack.peek() != null && minStack.peek() == data) {
-            minStack.pop();
+        E data = elementStock.pop();
+        if (data != null && !minElStock.isEmpty() && minElStock.peek() != null && minElStock.peek() == data) {
+            minElStock.pop();
         }
         return data;
     }
@@ -70,15 +70,15 @@ public abstract class AbstractAntMinStack<E> implements IAntMinStack<E> {
      */
     @Override
     public E min() throws Exception {
-        return minStack.peek();
+        return minElStock.peek();
     }
 
     /**
-     * 判空只需要验证 minStack 即可，因为如果有入栈操作总归会在 minStack 有值
+     * 判空只需要验证 minElStock 即可，因为如果有入栈操作总归会在 minElStock 有值
      *
      * @return
      */
     public boolean empty() {
-        return minStack.isEmpty();
+        return minElStock.isEmpty();
     }
 }
