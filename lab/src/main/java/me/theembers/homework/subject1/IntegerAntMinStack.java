@@ -17,7 +17,7 @@ public class IntegerAntMinStack extends AbstractAntMinStack<Integer> {
         if (target == null || target == null) {
             throw new RuntimeException("target or source couldn't be null.");
         }
-        if (target > source) {
+        if (target >= source) {
             return true;
         }
         return false;

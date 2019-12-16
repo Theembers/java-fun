@@ -19,7 +19,7 @@ public abstract class AbstractAntMinStack<E> implements IAntMinStack<E> {
 
     /**
      * 抽象比较器，需要个具体栈自行实现比较：
-     * 约定：source 小于 target 则 返回 true
+     * 约定：source 小于等于 target 则 返回 true （必须包含等于，如果没有等于，连续相同的最小值后出栈会有问题）
      *
      * @param target
      * @param source

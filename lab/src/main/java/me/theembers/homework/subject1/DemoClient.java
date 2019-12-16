@@ -40,9 +40,11 @@ public class DemoClient {
 
         IAntMinStack<String> stringAntMinStack = new StringAntMinStack();
         Random random2 = new Random(100);
+        // 字符串长度
+        int strLength = 1;
         for (int i = 0; i < 10; i++) {
             StringBuffer sb = new StringBuffer();
-            for (int j = 0; j < 5; j++) {
+            for (int j = 0; j < strLength; j++) {
                 int number = random2.nextInt(26);
                 sb.append(str.charAt(number));
             }
