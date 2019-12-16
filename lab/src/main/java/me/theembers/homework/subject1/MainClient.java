@@ -10,7 +10,7 @@ import java.util.Random;
  * 1.AntMinStack实现测试，满足栈特性
  * 2.要求min、push、pop、的时间复杂度都是O(1)
  */
-public class DemoClient {
+public class MainClient {
 
     public static void main(String[] args) {
         /**
@@ -21,7 +21,7 @@ public class DemoClient {
         for (int i = 0; i < 10; i++) {
             int item = random1.nextInt(100);
             integerAntMinStack.push(item);
-            System.out.println("push:\t" + item);
+            System.out.println("pushed:\t" + item);
             boolean flag = random1.nextBoolean();
             if (flag && !integerAntMinStack.empty()) {
                 try {
@@ -50,7 +50,7 @@ public class DemoClient {
             }
             String item = sb.toString();
             stringAntMinStack.push(item);
-            System.out.println("push:\t" + item);
+            System.out.println("pushed:\t" + item);
             boolean flag = random2.nextBoolean();
             if (flag && !stringAntMinStack.empty()) {
                 try {

@@ -9,7 +9,7 @@ import java.util.Stack;
  * 1. 使用原生 stack 实现基本的 元素存储
  * 2. 通过 minElStock
  * 记录每次 elementStock 压栈时的最小元素，如果当前元素小于 minElStock 栈顶元素 则压栈 minElStock
- * 每次 elementStock 出站时  minElStock 同步出栈（相同元素同步出栈）
+ * 每次 elementStock 出站时  minElStock 同步出栈（如果是相同元素同步出栈）
  *
  * @param <E>
  */

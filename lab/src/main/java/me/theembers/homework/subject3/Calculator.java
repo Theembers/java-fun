@@ -8,6 +8,12 @@ import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * 思路：
+ * 1. 有效性验证
+ * 2. 数字与运算符 拆分
+ * 3.
+ */
 public class Calculator {
 
     // 表达式字符合法性校验正则模式
@@ -16,13 +22,16 @@ public class Calculator {
     // 运算符优先级map
     private static final Map<String, Integer> OPT_PRIORITY_MAP = new HashMap<>();
 
+    /**
+     *
+     */
     static {
         OPT_PRIORITY_MAP.put("(", 0);
-        OPT_PRIORITY_MAP.put("+", 2);
-        OPT_PRIORITY_MAP.put("-", 2);
-        OPT_PRIORITY_MAP.put("*", 3);
-        OPT_PRIORITY_MAP.put("/", 3);
-        OPT_PRIORITY_MAP.put(")", 7);
+        OPT_PRIORITY_MAP.put("+", 1);
+        OPT_PRIORITY_MAP.put("-", 1);
+        OPT_PRIORITY_MAP.put("*", 2);
+        OPT_PRIORITY_MAP.put("/", 2);
+        OPT_PRIORITY_MAP.put(")", 3);
     }
 
 

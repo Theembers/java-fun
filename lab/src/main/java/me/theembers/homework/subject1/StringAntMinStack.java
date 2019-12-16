@@ -13,6 +13,9 @@ public class StringAntMinStack extends AbstractAntMinStack<String> {
      */
     @Override
     boolean compareLessThan(String target, String source) throws RuntimeException {
+        if (target == null || target == null) {
+            throw new RuntimeException("target or source couldn't be null.");
+        }
         if (target.compareTo(source) >= 0) {
             return true;
         }

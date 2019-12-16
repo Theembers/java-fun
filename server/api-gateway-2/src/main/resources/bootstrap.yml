@@ -1,0 +1,20 @@
+server:
+  port: 8870
+spring:
+  application:
+    name: api-gateway
+  profiles:
+    active: common
+  cloud:
+    config:
+      profile: dev
+      discovery:
+        service-id: config-server
+        enabled: true
+  kafka:
+    bootstrap-servers: 192.168.0.225:9092,192.168.0.226:9092,192.168.0.227:9092
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
