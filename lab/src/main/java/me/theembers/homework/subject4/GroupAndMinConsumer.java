@@ -44,20 +44,27 @@ public class GroupAndMinConsumer implements Runnable {
                         break;
                     }
                 } else {
-                    ItemInfo item = queue.take();
-                    ItemInfo curDataItem = groupMap.get(item.getGroupId());
-                    if (curDataItem == null) {
-                        groupMap.put(item.getGroupId(), item);
-                    } else {
-                        if (item.getQuota() < curDataItem.getQuota()) {
-                            groupMap.put(item.getGroupId(), item);
-                        }
-                    }
+                    compareAndSaveMinItem(queue.take());
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
+    /**
+     * 比较并存储最小数据项
+     *
+     * @param item 当前数据项
+     */
+    private void compareAndSaveMinItem(ItemInfo item) {
+        ItemInfo curDataItem = groupMap.get(item.getGroupId());
+        if (curDataItem == null) {
+            groupMap.put(item.getGroupId(), item);
+        } else {
+            if (item.getQuota() < curDataItem.getQuota()) {
+                groupMap.put(item.getGroupId(), item);
+            }
+        }
     }
 }

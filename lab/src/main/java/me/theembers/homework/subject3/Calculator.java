@@ -36,10 +36,10 @@ public class Calculator {
 
 
     /**
-     * 输入加减乘除表达式字符串，返回计算结果
+     * 根据 输入的表达式 输出运算结果
      *
      * @param expression 表达式字符串
-     * @return 返回计算结果
+     * @return 计算结果
      */
     public static double executeExpression(String expression) {
         // 非空校验
@@ -50,17 +50,17 @@ public class Calculator {
         // 表达式字符合法性校验
         Matcher matcher = EXPRESSION_PATTERN.matcher(expression);
         if (!matcher.matches()) {
-            throw new IllegalArgumentException("表达式含有非法字符！");
+            throw new IllegalArgumentException("bad expression.");
         }
 
         // 运算符栈
         Stack<String> optStack = new Stack<>();
         // 数值栈
         Stack<BigDecimal> numStack = new Stack<>();
-        // 当前正在读取中的数值字符缓存
+        // 当前正在读取的数值字符缓存
         StringBuilder curNumCache = new StringBuilder();
 
-        // 逐个读取字符，并根据运算符判断参与何种计算
+        // 逐个读取字符 并根据运算符判断参与何种计算
         for (int i = 0; i < expression.length(); i++) {
             char c = expression.charAt(i);
             if (c == ' ') {
@@ -71,7 +71,7 @@ public class Calculator {
                 curNumCache.append(c);
             } else {
                 if (curNumCache.length() > 0) {
-                    // 如果追加器有值，说明之前读取的字符是数值，而且此时已经完整读取完一个数值 写入 numStack
+                    // 如果数值字符缓存有值 说明之前读取的字符是数值 而且此时已经完整读取完一个数值 写入 numStack
                     numStack.push(new BigDecimal(curNumCache.toString()));
                     // 重置数值字符缓存
                     curNumCache.delete(0, curNumCache.length());
@@ -82,10 +82,10 @@ public class Calculator {
                     optStack.push(curOpt);
                 } else {
                     if (curOpt.equals("(")) {
-                        // 当前运算符为左括号，直接入运算符栈
+                        // 当前运算符为左括号 直接入运算符栈
                         optStack.push(curOpt);
                     } else if (curOpt.equals(")")) {
-                        // 当前运算符为右括号，触发括号内的字表达式进行计算
+                        // 当前运算符为右括号 触发括号内的字表达式进行计算
                         directCalc(optStack, numStack, true);
                     } else {
                         // 当前运算符为加减乘除之一，要与栈顶运算符比较，判断是否要进行一次二元计算

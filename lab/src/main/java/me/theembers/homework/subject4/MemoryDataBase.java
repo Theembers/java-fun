@@ -1,6 +1,5 @@
 package me.theembers.homework.subject4;
 
-import java.util.TreeMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
@@ -9,6 +8,9 @@ import java.util.concurrent.LinkedBlockingQueue;
  * createTime 2019-12-16 8:32 下午
  */
 public class MemoryDataBase {
+    /**
+     * 存储队列
+     */
     private LinkedBlockingQueue<ItemInfo> queue;
     public MemoryDataBase() {
         queue = new LinkedBlockingQueue<>();

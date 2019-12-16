@@ -20,7 +20,7 @@ public class MainClient {
         File[] files = dirFile.listFiles();
 
         MemoryDataBase dataBase = new MemoryDataBase();
-        // countDownLatch 的 count 等于： 文件数量 + 1个 consumer 线程数
+        // countDownLatch的count等于：文件数量 + 1个consumer线程数
         CountDownLatch countDownLatch = new CountDownLatch(files.length + 1);
 
         for (File file : files) {
@@ -40,5 +40,7 @@ public class MainClient {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
     }
 }
