@@ -15,8 +15,9 @@ public class CountDownLatchDemo {
     public static void main(String[] args) {
         CountDownLatchDemo demo = new CountDownLatchDemo();
         new Thread(() -> {
-            for (int i = 0; i <= 6; i++)
+            for (int i = 0; i <= 6; i++) {
                 demo.bizMethod();
+            }
         }).start();
 
         new Thread(() -> {
@@ -52,6 +53,5 @@ public class CountDownLatchDemo {
             e.printStackTrace();
         }
         return true;
-
     }
 }
