@@ -21,12 +21,12 @@ public class DemoClient {
         for (int i = 0; i < 10; i++) {
             int item = random1.nextInt(100);
             integerAntMinStack.push(item);
-            System.out.println("push: " + item);
+            System.out.println("push:\t" + item);
             boolean flag = random1.nextBoolean();
             if (flag && !integerAntMinStack.empty()) {
                 try {
                     int min = integerAntMinStack.min();
-                    System.out.println("min: " + min);
+                    System.out.println("min:\t" + min);
                 } catch (Exception e) {
                     System.err.println();
                 }
@@ -39,7 +39,7 @@ public class DemoClient {
         String str = "abcdefghijklmnopqrstuvwxyz";
 
         IAntMinStack<String> stringAntMinStack = new StringAntMinStack();
-        Random random2 = new Random();
+        Random random2 = new Random(100);
         for (int i = 0; i < 10; i++) {
             StringBuffer sb = new StringBuffer();
             for (int j = 0; j < 5; j++) {
@@ -48,12 +48,12 @@ public class DemoClient {
             }
             String item = sb.toString();
             stringAntMinStack.push(item);
-            System.out.println("push: " + item);
+            System.out.println("push:\t" + item);
             boolean flag = random2.nextBoolean();
             if (flag && !stringAntMinStack.empty()) {
                 try {
                     String min = stringAntMinStack.min();
-                    System.out.println("min: " + min);
+                    System.out.println("min:\t" + min);
                 } catch (Exception e) {
                     System.err.println();
                 }
