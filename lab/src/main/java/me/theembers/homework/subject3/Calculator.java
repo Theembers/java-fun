@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 public class Calculator {
 
     // 表达式字符合法性校验正则模式
-    private static final Pattern EXPRESSION_PATTERN = Pattern.compile("[0-9\\.+-/*()= ]+");
+    private static final Pattern EXPRESSION_PATTERN = Pattern.compile("[0-9\\.+-/*() ]+");
 
     // 运算符优先级map
     private static final Map<String, Integer> OPT_PRIORITY_MAP = new HashMap<>();
