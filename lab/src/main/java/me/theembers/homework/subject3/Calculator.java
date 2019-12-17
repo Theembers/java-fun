@@ -138,7 +138,6 @@ public class Calculator {
         BigDecimal num2 = numStack.pop();
         BigDecimal num1 = numStack.pop();
 
-
         BigDecimal bigDecimal = operatorContext.operate(operate, num1, num2);
 
         // 计算结果当做操作数入栈

@@ -36,6 +36,7 @@ public class SegmentReaderTask implements Runnable {
 
     /**
      * 读取线程
+     * 读取文件流
      */
     @Override
     public void run() {
@@ -53,7 +54,7 @@ public class SegmentReaderTask implements Runnable {
                 mapBuffer.get(readBuff, 0, readLength);
                 for (int i = 0; i < readLength; i++) {
                     byte tmp = readBuff[i];
-                    if (tmp == '\n' || tmp == '\r') {
+                    if (tmp == '\n' || tmp == '\r' || tmp == '\b') {
                         doWork(bos.toByteArray());
                         bos.reset();
                     } else {
@@ -70,6 +71,11 @@ public class SegmentReaderTask implements Runnable {
         }
     }
 
+    /**
+     * 字节转换字符串 并调用 WorkHandler#execute() 方法
+     * @param bytes
+     * @throws UnsupportedEncodingException
+     */
     private void doWork(byte[] bytes) throws UnsupportedEncodingException {
         String line = new String(bytes, readerConfig.getCharset());
         if (line != null && !"".equals(line)) {

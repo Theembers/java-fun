@@ -54,7 +54,7 @@ public class CountWordsWorkHandler implements WorkHandler {
                 wordsCountMap.get(word).addAndGet(1);
                 lock.unlock();
             }
-            // 不需要统计的词直接丢弃
+            // 到这里 不需要统计的词直接丢弃
         }
     }
 
@@ -65,6 +65,7 @@ public class CountWordsWorkHandler implements WorkHandler {
 
     @Override
     public void execute(String line) {
+//        System.out.println(Thread.currentThread().getName()+": "+line);
         countWords(line);
     }
 }
