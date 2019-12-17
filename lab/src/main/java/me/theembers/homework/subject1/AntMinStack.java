@@ -19,7 +19,7 @@ public interface AntMinStack<E> {
      * @return
      * @throws Exception
      */
-    E pop() throws Exception;
+    E pop();
 
     /**
      * min 最小函数，调用该函数，可直接返回当前AntMinStack的栈的最小值
@@ -27,7 +27,7 @@ public interface AntMinStack<E> {
      * @return
      * @throws Exception
      */
-    E min() throws Exception;
+    E min();
 
     /**
      * 元素判空

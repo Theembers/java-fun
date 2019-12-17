@@ -66,10 +66,9 @@ public abstract class AbstractAntMinStack<E> implements AntMinStack<E> {
      * min 最小函数
      *
      * @return
-     * @throws Exception
      */
     @Override
-    public E min() throws Exception {
+    public E min() {
         return minElStock.peek();
     }
 
