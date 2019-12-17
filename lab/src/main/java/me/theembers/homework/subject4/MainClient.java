@@ -11,6 +11,9 @@ import java.util.concurrent.Executors;
  * createTime 2019-12-16 8:33 下午
  */
 public class MainClient {
+    /**
+     * 线程池 用于并行读取文件
+     */
     private static final ExecutorService EXECUTOR_SERVICE = Executors.newFixedThreadPool(10);
 
     public static void main(String[] args) {
