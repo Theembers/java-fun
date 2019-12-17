@@ -22,29 +22,11 @@ public class Calculator {
     private static final Pattern EXPRESSION_PATTERN = Pattern.compile("[0-9\\.+-/*() ]+");
 
 
-    // 运算符方法集
-    private static final Map<String, Operator> OPERATOR_MAP = new HashMap<>();
+    private OperationContext operationContext;
 
-    static {
-        OPERATOR_MAP.put("+", new AddOperator());
-        OPERATOR_MAP.put("-", new SubtractOperator());
-        OPERATOR_MAP.put("*", new MultiplyOperator());
-        OPERATOR_MAP.put("/", new DivideOperator());
+    public Calculator(OperationContext operationContext) {
+        this.operationContext = operationContext;
     }
-
-
-    // 运算符优先级map
-    private static final Map<String, Integer> OPERATOR_PRIORITY_MAP = new HashMap<>();
-
-    static {
-        OPERATOR_PRIORITY_MAP.put("(", 0);
-        OPERATOR_PRIORITY_MAP.put("+", 1);
-        OPERATOR_PRIORITY_MAP.put("-", 1);
-        OPERATOR_PRIORITY_MAP.put("*", 2);
-        OPERATOR_PRIORITY_MAP.put("/", 2);
-        OPERATOR_PRIORITY_MAP.put(")", 3);
-    }
-
 
     /**
      * 根据 输入的表达式 输出运算结果
@@ -65,7 +47,7 @@ public class Calculator {
         }
 
         // 运算符栈
-        Stack<String> optStack = new Stack<>();
+        Stack<String> operateStack = new Stack<>();
         // 数值栈
         Stack<BigDecimal> numStack = new Stack<>();
         // 当前正在读取的数值字符缓存
@@ -88,19 +70,19 @@ public class Calculator {
                     curNumCache.delete(0, curNumCache.length());
                 }
 
-                String curOpt = String.valueOf(c);
-                if (optStack.empty()) {
-                    optStack.push(curOpt);
+                String operate = String.valueOf(c);
+                if (operateStack.empty()) {
+                    operateStack.push(operate);
                 } else {
-                    if (curOpt.equals("(")) {
+                    if (operate.equals("(")) {
                         // 当前运算符为左括号 直接入运算符栈
-                        optStack.push(curOpt);
-                    } else if (curOpt.equals(")")) {
+                        operateStack.push(operate);
+                    } else if (operate.equals(")")) {
                         // 当前运算符为右括号 触发括号内的字表达式进行计算
-                        directCalc(optStack, numStack, true);
+                        doCalc(operateStack, numStack);
                     } else {
                         // 当前运算符为加减乘除之一，要与栈顶运算符比较，判断是否要进行一次二元计算
-                        comparePriorityAndCalc(optStack, numStack, curOpt);
+                        comparePriorityAndCalc(operateStack, numStack, operate);
                     }
                 }
             }
@@ -109,7 +91,7 @@ public class Calculator {
             // 如果数值字符缓存有值，说明之前读取的字符是数值，而且此时已经完整读取完一个数值
             numStack.push(new BigDecimal(curNumCache.toString()));
         }
-        directCalc(optStack, numStack, false);
+        doCalc(operateStack, numStack);
         return numStack.pop().doubleValue();
     }
 
@@ -117,84 +99,67 @@ public class Calculator {
      * 拿当前运算符和栈顶运算符对比，如果栈顶运算符优先级高于或同级于当前运算符，
      * 则执行一次二元运算（递归比较并计算），否则当前运算符入栈
      *
-     * @param optStack 运算符栈
-     * @param numStack 数值栈
-     * @param theOpt   当前运算符
+     * @param operateStack 运算符栈
+     * @param numStack     数值栈
+     * @param theOperate   当前运算符
      */
-    private void comparePriorityAndCalc(Stack<String> optStack, Stack<BigDecimal> numStack, String theOpt) {
+    private void comparePriorityAndCalc(Stack<String> operateStack, Stack<BigDecimal> numStack, String theOperate) {
         // 比较当前运算符和栈顶运算符的优先级
-        String peekOpt = optStack.peek();
-        int priority = checkPriority(peekOpt, theOpt);
+        String peekOperate = operateStack.peek();
+        int priority = operationContext.checkPriority(peekOperate, theOperate);
         if (priority == -1 || priority == 0) {
-            // 栈顶运算符优先级大或同级，触发一次二元运算
-            String opt = optStack.pop(); // 当前参与计算运算符
-            BigDecimal num2 = numStack.pop(); // 当前参与计算数值2
-            BigDecimal num1 = numStack.pop(); // 当前参与计算数值1
-            BigDecimal bigDecimal = doCalc(opt, num1, num2);
+            // 当前参与计算运算符
+            String operate = operateStack.pop();
+            // 当前参与计算的两个数值
+            BigDecimal num2 = numStack.pop();
+            BigDecimal num1 = numStack.pop();
+
+
+            BigDecimal bigDecimal = operationContext.operate(operate, num1, num2);
 
             // 计算结果当做操作数入栈
             numStack.push(bigDecimal);
             // 运算完栈顶还有运算符，则还需要再次触发一次比较判断是否需要再次二元计算
-            if (optStack.empty()) {
-                optStack.push(theOpt);
+            if (operateStack.empty()) {
+                operateStack.push(theOperate);
             } else {
-                comparePriorityAndCalc(optStack, numStack, theOpt);
+                comparePriorityAndCalc(operateStack, numStack, theOperate);
             }
         } else {
             // 当前运算符优先级高，则直接入栈
-            optStack.push(theOpt);
+            operateStack.push(theOperate);
         }
     }
 
     /**
-     * 遇到右括号和等号执行的连续计算操作（递归计算）
+     * 遇到右括号执行的连续计算操作（递归计算）
      *
-     * @param optStack  运算符栈
-     * @param numStack  数值栈
-     * @param isBracket true表示为括号类型计算
+     * @param operateStack 运算符栈
+     * @param numStack     数值栈
      */
-    private void directCalc(Stack<String> optStack, Stack<BigDecimal> numStack, boolean isBracket) {
-        String opt = optStack.pop(); // 当前参与计算运算符
-        BigDecimal num2 = numStack.pop(); // 当前参与计算数值2
-        BigDecimal num1 = numStack.pop(); // 当前参与计算数值1
-        BigDecimal bigDecimal = doCalc(opt, num1, num2);
+    private void doCalc(Stack<String> operateStack, Stack<BigDecimal> numStack) {
+        // 当前参与计算运算符
+        String operate = operateStack.pop();
+        // 当前参与计算的两个数值
+        BigDecimal num2 = numStack.pop();
+        BigDecimal num1 = numStack.pop();
+
+
+        BigDecimal bigDecimal = operationContext.operate(operate, num1, num2);
 
         // 计算结果当做操作数入栈
         numStack.push(bigDecimal);
-
-        if (isBracket) {
-            if ("(".equals(optStack.peek())) {
-                // 括号类型则遇左括号停止计算，同时将左括号从栈中移除
-                optStack.pop();
-            } else {
-                directCalc(optStack, numStack, isBracket);
-            }
+        if (operateStack.empty()) {
+            return;
+        }
+        if ("(".equals(operateStack.peek())) {
+            // 括号类型则遇左括号停止计算，同时将左括号从栈中移除
+            operateStack.pop();
         } else {
-            if (!optStack.empty()) {
-                // 等号类型只要栈中还有运算符就继续计算
-                directCalc(optStack, numStack, isBracket);
-            }
+            doCalc(operateStack, numStack);
         }
     }
 
-    /**
-     * 执行计算
-     */
-    private BigDecimal doCalc(String opt, BigDecimal num1, BigDecimal num2) {
-        return OPERATOR_MAP.get(opt).operate(num1, num2);
-    }
 
-    /**
-     * priority = 0 表示两个运算符同级别
-     * priority = 1 第二个运算符级别高，负数则相反
-     *
-     * @param opt1
-     * @param opt2
-     * @return
-     */
-    private int checkPriority(String opt1, String opt2) {
-        int priority = OPERATOR_PRIORITY_MAP.get(opt2) - OPERATOR_PRIORITY_MAP.get(opt1);
-        return priority;
-    }
 }
 
