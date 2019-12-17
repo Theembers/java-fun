@@ -1,6 +1,8 @@
 package me.theembers.homework.subject3;
 
 
+import me.theembers.homework.subject3.operator.*;
+
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,19 +21,28 @@ public class Calculator {
     // 表达式字符合法性校验正则模式
     private static final Pattern EXPRESSION_PATTERN = Pattern.compile("[0-9\\.+-/*() ]+");
 
-    // 运算符优先级map
-    private static final Map<String, Integer> OPT_PRIORITY_MAP = new HashMap<>();
 
-    /**
-     *
-     */
+    // 运算符方法集
+    private static final Map<String, Operator> OPERATOR_MAP = new HashMap<>();
+
     static {
-        OPT_PRIORITY_MAP.put("(", 0);
-        OPT_PRIORITY_MAP.put("+", 1);
-        OPT_PRIORITY_MAP.put("-", 1);
-        OPT_PRIORITY_MAP.put("*", 2);
-        OPT_PRIORITY_MAP.put("/", 2);
-        OPT_PRIORITY_MAP.put(")", 3);
+        OPERATOR_MAP.put("+", new AddOperator());
+        OPERATOR_MAP.put("-", new SubtractOperator());
+        OPERATOR_MAP.put("*", new MultiplyOperator());
+        OPERATOR_MAP.put("/", new DivideOperator());
+    }
+
+
+    // 运算符优先级map
+    private static final Map<String, Integer> OPERATOR_PRIORITY_MAP = new HashMap<>();
+
+    static {
+        OPERATOR_PRIORITY_MAP.put("(", 0);
+        OPERATOR_PRIORITY_MAP.put("+", 1);
+        OPERATOR_PRIORITY_MAP.put("-", 1);
+        OPERATOR_PRIORITY_MAP.put("*", 2);
+        OPERATOR_PRIORITY_MAP.put("/", 2);
+        OPERATOR_PRIORITY_MAP.put(")", 3);
     }
 
 
@@ -41,7 +52,7 @@ public class Calculator {
      * @param expression 表达式字符串
      * @return 计算结果
      */
-    public static double executeExpression(String expression) {
+    public double execute(String expression) {
         // 非空校验
         if (null == expression || "".equals(expression.trim())) {
             throw new IllegalArgumentException("expression couldn't be empty.");
@@ -110,7 +121,7 @@ public class Calculator {
      * @param numStack 数值栈
      * @param theOpt   当前运算符
      */
-    private static void comparePriorityAndCalc(Stack<String> optStack, Stack<BigDecimal> numStack, String theOpt) {
+    private void comparePriorityAndCalc(Stack<String> optStack, Stack<BigDecimal> numStack, String theOpt) {
         // 比较当前运算符和栈顶运算符的优先级
         String peekOpt = optStack.peek();
         int priority = checkPriority(peekOpt, theOpt);
@@ -142,7 +153,7 @@ public class Calculator {
      * @param numStack  数值栈
      * @param isBracket true表示为括号类型计算
      */
-    private static void directCalc(Stack<String> optStack, Stack<BigDecimal> numStack, boolean isBracket) {
+    private void directCalc(Stack<String> optStack, Stack<BigDecimal> numStack, boolean isBracket) {
         String opt = optStack.pop(); // 当前参与计算运算符
         BigDecimal num2 = numStack.pop(); // 当前参与计算数值2
         BigDecimal num1 = numStack.pop(); // 当前参与计算数值1
@@ -169,26 +180,8 @@ public class Calculator {
     /**
      * 执行计算
      */
-    private static BigDecimal doCalc(String opt, BigDecimal bigDecimal1,
-                                     BigDecimal bigDecimal2) {
-        BigDecimal resultBigDecimal = new BigDecimal(0);
-        switch (opt) {
-            case "+":
-                resultBigDecimal = bigDecimal1.add(bigDecimal2);
-                break;
-            case "-":
-                resultBigDecimal = bigDecimal1.subtract(bigDecimal2);
-                break;
-            case "*":
-                resultBigDecimal = bigDecimal1.multiply(bigDecimal2);
-                break;
-            case "/":
-                resultBigDecimal = bigDecimal1.divide(bigDecimal2, 10, BigDecimal.ROUND_HALF_DOWN);
-                break;
-            default:
-                break;
-        }
-        return resultBigDecimal;
+    private BigDecimal doCalc(String opt, BigDecimal num1, BigDecimal num2) {
+        return OPERATOR_MAP.get(opt).operate(num1, num2);
     }
 
     /**
@@ -199,8 +192,8 @@ public class Calculator {
      * @param opt2
      * @return
      */
-    private static int checkPriority(String opt1, String opt2) {
-        int priority = OPT_PRIORITY_MAP.get(opt2) - OPT_PRIORITY_MAP.get(opt1);
+    private int checkPriority(String opt1, String opt2) {
+        int priority = OPERATOR_PRIORITY_MAP.get(opt2) - OPERATOR_PRIORITY_MAP.get(opt1);
         return priority;
     }
 }
