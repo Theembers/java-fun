@@ -9,14 +9,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 设计数据结构与算法，计算算数表达式，需要支持基本计算，加减乘除，满足计算优先级例如输入 3*0+3+8+9*1 输出20。括号，支持括号，例如输入 3+（3-0）*2 输出 9假设所有的数字均为整数，无需考虑精度问题。
- * 要求：
- * 1.代码结构清晰
- * 2.数据结构选型合理。
- * 3.不能使用现成的引擎
+ * 计算器
  */
 public class Calculator {
-
     // 表达式字符合法性校验正则模式
     private static final Pattern EXPRESSION_PATTERN = Pattern.compile("[0-9\\.+-/*() ]+");
 

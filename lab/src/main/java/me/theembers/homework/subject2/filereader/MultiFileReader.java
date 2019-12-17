@@ -7,8 +7,10 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-
-public class BigFileReader implements FileReader {
+/**
+ * 多线程的文件读取
+ */
+public class MultiFileReader implements FileReader {
     /**
      * 线程池
      */
@@ -23,7 +25,7 @@ public class BigFileReader implements FileReader {
     private Set<SegmentReaderTask.Point> segmentPoints;
 
 
-    public BigFileReader(File file, ReaderConfig readerConfig, WorkHandler handler) {
+    public MultiFileReader(File file, ReaderConfig readerConfig, WorkHandler handler) {
         if (!file.exists()) {
             throw new RuntimeException("file isn't existed.");
         }
@@ -41,7 +43,7 @@ public class BigFileReader implements FileReader {
 
     @Override
     public final void execute() {
-        // 初始化
+        // 初始化分段
         initSegmentPoint();
         if (segmentPoints == null || segmentPoints.size() == 0) {
             return;
@@ -51,6 +53,7 @@ public class BigFileReader implements FileReader {
             this.executorService.execute(new SegmentReaderTask(point, raFile, handler, readerConfig, countDownLatch));
         }
         try {
+            // 执行完毕后 结束
             countDownLatch.await();
             destroy();
         } catch (InterruptedException e) {
@@ -58,10 +61,14 @@ public class BigFileReader implements FileReader {
         }
     }
 
+    /**
+     * 初始化分段
+     * 根据文件长度 与 线程数 求出每个线程读取流段落长度
+     */
     private final void initSegmentPoint() {
-        long segmentCount = this.fileLength / this.readerConfig.getThreadSize();
+        long size = this.fileLength / this.readerConfig.getThreadSize();
         try {
-            splitSegment(0, segmentCount);
+            splitSegment(0, size);
         } catch (IOException e) {
             e.printStackTrace();
             return;

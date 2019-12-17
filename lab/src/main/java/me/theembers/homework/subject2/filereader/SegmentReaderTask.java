@@ -7,6 +7,9 @@ import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.concurrent.CountDownLatch;
 
+/**
+ * 分段读取任务
+ */
 public class SegmentReaderTask implements Runnable {
     private long start;
     private long segmentSize;
