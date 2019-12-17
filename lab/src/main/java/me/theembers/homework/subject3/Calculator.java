@@ -1,20 +1,19 @@
 package me.theembers.homework.subject3;
 
 
-import me.theembers.homework.subject3.operator.*;
+import me.theembers.homework.subject3.operator.OperatorContext;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 思路：
- * 1. 有效性验证
- * 2. 数字与运算符 拆分
- * 3.
+ * 设计数据结构与算法，计算算数表达式，需要支持基本计算，加减乘除，满足计算优先级例如输入 3*0+3+8+9*1 输出20。括号，支持括号，例如输入 3+（3-0）*2 输出 9假设所有的数字均为整数，无需考虑精度问题。
+ * 要求：
+ * 1.代码结构清晰
+ * 2.数据结构选型合理。
+ * 3.不能使用现成的引擎
  */
 public class Calculator {
 
@@ -22,10 +21,10 @@ public class Calculator {
     private static final Pattern EXPRESSION_PATTERN = Pattern.compile("[0-9\\.+-/*() ]+");
 
 
-    private OperationContext operationContext;
+    private OperatorContext operatorContext;
 
-    public Calculator(OperationContext operationContext) {
-        this.operationContext = operationContext;
+    public Calculator(OperatorContext operationContext) {
+        this.operatorContext = operationContext;
     }
 
     /**
@@ -106,7 +105,7 @@ public class Calculator {
     private void comparePriorityAndCalc(Stack<String> operateStack, Stack<BigDecimal> numStack, String theOperate) {
         // 比较当前运算符和栈顶运算符的优先级
         String peekOperate = operateStack.peek();
-        int priority = operationContext.checkPriority(peekOperate, theOperate);
+        int priority = operatorContext.checkPriority(peekOperate, theOperate);
         if (priority == -1 || priority == 0) {
             // 当前参与计算运算符
             String operate = operateStack.pop();
@@ -115,7 +114,7 @@ public class Calculator {
             BigDecimal num1 = numStack.pop();
 
 
-            BigDecimal bigDecimal = operationContext.operate(operate, num1, num2);
+            BigDecimal bigDecimal = operatorContext.operate(operate, num1, num2);
 
             // 计算结果当做操作数入栈
             numStack.push(bigDecimal);
@@ -145,7 +144,7 @@ public class Calculator {
         BigDecimal num1 = numStack.pop();
 
 
-        BigDecimal bigDecimal = operationContext.operate(operate, num1, num2);
+        BigDecimal bigDecimal = operatorContext.operate(operate, num1, num2);
 
         // 计算结果当做操作数入栈
         numStack.push(bigDecimal);

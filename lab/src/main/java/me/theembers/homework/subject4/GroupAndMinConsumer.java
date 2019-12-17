@@ -24,6 +24,7 @@ public class GroupAndMinConsumer implements Runnable {
 
     public GroupAndMinConsumer(MemoryDataBase dataBase, CountDownLatch countDownLatch) {
         this.dataBase = dataBase;
+        // treeMap 排序，实现comparator：根据key值升序
         this.groupMap = new TreeMap<>(Comparator.comparing(Long::valueOf));
         this.countDownLatch = countDownLatch;
     }
@@ -35,15 +36,17 @@ public class GroupAndMinConsumer implements Runnable {
     @Override
     public void run() {
         try {
-            LinkedBlockingQueue<ItemInfo> queue = this.dataBase.getQueue();
+            LinkedBlockingQueue<ItemInfo> queue = this.dataBase.getDataTable();
             for (; ; ) {
                 if (queue.isEmpty()) {
-                    // 只有当 count 为 1 时 才说明 生产者数据已全部完成加载
+                    // 只有当 count 为1时说明 FileDataProducer数据已全部完成加载
                     if (countDownLatch.getCount() <= 1) {
                         countDownLatch.countDown();
                         break;
                     }
+                    // 到这里说明仍有线程未完成 继续执行
                 } else {
+                    // 执行比较操作 维护各分组的最小值
                     compareAndSaveMinItem(queue.take());
                 }
             }

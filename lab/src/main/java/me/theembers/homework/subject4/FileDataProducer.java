@@ -12,6 +12,9 @@ import java.util.concurrent.LinkedBlockingQueue;
  * createTime 2019-12-16 8:34 下午
  */
 public class FileDataProducer implements Runnable {
+    /**
+     * 内存数据库
+     */
     private MemoryDataBase dataBase;
     private File file;
     private CountDownLatch countDownLatch;
@@ -32,7 +35,7 @@ public class FileDataProducer implements Runnable {
      * 文件数据读取
      */
     private void loadFileData() {
-        LinkedBlockingQueue<ItemInfo> queue = dataBase.getQueue();
+        LinkedBlockingQueue<ItemInfo> queue = dataBase.getDataTable();
         InputStreamReader read;
         try {
             read = new InputStreamReader(new FileInputStream(file));

@@ -1,11 +1,11 @@
 package me.theembers.homework.subject3;
 
 
-import me.theembers.homework.subject3.operator.OperationContext;
+import me.theembers.homework.subject3.operator.OperatorContext;
 
 public class MainClient {
     public static void main(String[] args) {
-        Calculator calculator = new Calculator(new OperationContext());
+        Calculator calculator = new Calculator(new OperatorContext());
 
         String expression1 = "3*0+3+8+9*1";
         System.out.println(expression1 + "= " + calculator.execute(expression1));

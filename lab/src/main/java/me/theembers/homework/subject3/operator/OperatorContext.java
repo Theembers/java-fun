@@ -4,7 +4,11 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
-public class OperationContext {
+
+/**
+ * 运算上下文
+ */
+public class OperatorContext {
     // 运算符方法集
     private static final Map<String, Operator> OPERATOR_MAP = new HashMap<>();
 

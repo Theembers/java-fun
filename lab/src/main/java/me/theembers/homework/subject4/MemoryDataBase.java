@@ -11,16 +11,13 @@ public class MemoryDataBase {
     /**
      * 存储队列
      */
-    private LinkedBlockingQueue<ItemInfo> queue;
+    private LinkedBlockingQueue<ItemInfo> dataTable;
+
     public MemoryDataBase() {
-        queue = new LinkedBlockingQueue<>();
+        dataTable = new LinkedBlockingQueue<>();
     }
 
-    public LinkedBlockingQueue<ItemInfo> getQueue() {
-        return queue;
-    }
-
-    public void setQueue(LinkedBlockingQueue<ItemInfo> queue) {
-        this.queue = queue;
+    public LinkedBlockingQueue<ItemInfo> getDataTable() {
+        return dataTable;
     }
 }
