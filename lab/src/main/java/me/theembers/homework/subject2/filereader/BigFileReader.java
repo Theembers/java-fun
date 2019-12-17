@@ -10,38 +10,32 @@ import java.util.concurrent.Executors;
 
 public class BigFileReader implements FileReader {
     /**
-     * 线程数
-     */
-    private int threadSize;
-    /**
-     * 字符集
-     */
-    private String charset;
-
-    private WorkHandler handler;
-    /**
      * 线程池
      */
     private ExecutorService executorService;
+
+
+    private WorkHandler handler;
+    private ReaderConfig readerConfig;
+
     private long fileLength;
     private RandomAccessFile raFile;
-    private Set<SegmentReaderTask.StartEndPoint> segmentPoints;
+    private Set<SegmentReaderTask.Point> segmentPoints;
 
 
-    public BigFileReader(File file, String charset, WorkHandler handler, int threadSize) {
+    public BigFileReader(File file, ReaderConfig readerConfig, WorkHandler handler) {
         if (!file.exists()) {
             throw new RuntimeException("file isn't existed.");
         }
         this.fileLength = file.length();
         this.handler = handler;
-        this.charset = charset;
-        this.threadSize = threadSize;
+        this.readerConfig = readerConfig;
         try {
             this.raFile = new RandomAccessFile(file, "r");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        this.executorService = Executors.newFixedThreadPool(threadSize);
+        this.executorService = Executors.newFixedThreadPool(readerConfig.getThreadSize());
         segmentPoints = new HashSet<>();
     }
 
@@ -53,8 +47,8 @@ public class BigFileReader implements FileReader {
             return;
         }
         CountDownLatch countDownLatch = new CountDownLatch(segmentPoints.size());
-        for (SegmentReaderTask.StartEndPoint point : segmentPoints) {
-            this.executorService.execute(new SegmentReaderTask(point, raFile, handler, charset, countDownLatch));
+        for (SegmentReaderTask.Point point : segmentPoints) {
+            this.executorService.execute(new SegmentReaderTask(point, raFile, handler, readerConfig, countDownLatch));
         }
         try {
             countDownLatch.await();
@@ -65,7 +59,7 @@ public class BigFileReader implements FileReader {
     }
 
     private final void initSegmentPoint() {
-        long segmentCount = this.fileLength / this.threadSize;
+        long segmentCount = this.fileLength / this.readerConfig.getThreadSize();
         try {
             splitSegment(0, segmentCount);
         } catch (IOException e) {
@@ -94,7 +88,7 @@ public class BigFileReader implements FileReader {
         if (start > fileLength - 1) {
             return;
         }
-        SegmentReaderTask.StartEndPoint point = new SegmentReaderTask.StartEndPoint();
+        SegmentReaderTask.Point point = new SegmentReaderTask.Point();
         point.start = start;
         long endPosition = start + size - 1;
         if (endPosition >= fileLength - 1) {

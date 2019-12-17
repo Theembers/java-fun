@@ -13,27 +13,21 @@ public class SegmentReaderTask implements Runnable {
     private byte[] readBuff;
 
     private RandomAccessFile raFile;
-    /**
-     * 缓冲区大小
-     */
-    private static final int bufferSize = 1024 * 1024;
-    /**
-     * 字符集
-     */
-    private String charset;
+
+    private ReaderConfig readerConfig;
 
     private WorkHandler handler;
 
     private CountDownLatch countDownLatch;
 
 
-    public SegmentReaderTask(StartEndPoint point, RandomAccessFile raFile, WorkHandler handler, String charset, CountDownLatch countDownLatch) {
+    public SegmentReaderTask(Point point, RandomAccessFile raFile, WorkHandler handler, ReaderConfig readerConfig, CountDownLatch countDownLatch) {
         this.start = point.start;
         this.segmentSize = point.end - point.start + 1;
-        this.readBuff = new byte[bufferSize];
+        this.readBuff = new byte[readerConfig.getBufferSize()];
         this.raFile = raFile;
         this.handler = handler;
-        this.charset = charset;
+        this.readerConfig = readerConfig;
         this.countDownLatch = countDownLatch;
     }
 
@@ -42,6 +36,7 @@ public class SegmentReaderTask implements Runnable {
         try {
             MappedByteBuffer mapBuffer = raFile.getChannel().map(FileChannel.MapMode.READ_ONLY, start, this.segmentSize);
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            int bufferSize = readerConfig.getBufferSize();
             for (int offset = 0; offset < segmentSize; offset += bufferSize) {
                 int readLength;
                 if (offset + bufferSize <= segmentSize) {
@@ -70,13 +65,13 @@ public class SegmentReaderTask implements Runnable {
     }
 
     private void doWork(byte[] bytes) throws UnsupportedEncodingException {
-        String line = new String(bytes, charset);
+        String line = new String(bytes, readerConfig.getCharset());
         if (line != null && !"".equals(line)) {
             this.handler.execute(line);
         }
     }
 
-    public static class StartEndPoint {
+    public static class Point {
         public long start;
         public long end;
     }
