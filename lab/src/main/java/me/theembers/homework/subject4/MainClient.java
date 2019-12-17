@@ -12,7 +12,7 @@ import java.util.concurrent.Executors;
  */
 public class MainClient {
     /**
-     * 线程池 用于并行读取文件
+     * 线程池 用于并发读取文件数据到 MemoryDataBase
      */
     private static final ExecutorService EXECUTOR_SERVICE = Executors.newFixedThreadPool(10);
 
