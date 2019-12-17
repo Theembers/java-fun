@@ -20,15 +20,20 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class MainClient {
     public static void main(String[] args) {
+        long start = System.currentTimeMillis();
+
         // 设置 单词个数统计 WorkHandler
-        CountWordsWorkHandler countWords = new CountWordsWorkHandler("harry", "that", "the");
+        CountWordsWorkHandler countWords = new CountWordsWorkHandler("DEBUG", "ERROR", "INFO");
         // 设置 文件读取配置信息
-        ReaderConfig readerConfig = new ReaderConfig(10, 100, "UTF-8");
+        ReaderConfig readerConfig = new ReaderConfig(5, 1024 * 1024, "UTF-8");
 
         // 初始化 文件读取器
-        FileReader fileReader = new MultiFileReader(new File("F:\\hp1.txt"), readerConfig, countWords);
+        FileReader fileReader = new MultiFileReader(new File("F:\\1.log"), readerConfig, countWords);
         // 执行
         fileReader.execute();
+
+        long end = System.currentTimeMillis();
+        System.out.println(String.format("执行总耗时：%d", end - start));
         // 获取 结果
         Map<String, AtomicLong> map = countWords.getWordsCountMap();
         map.forEach((k, v) -> System.out.println(String.format("%s : %d", k, v.get())));

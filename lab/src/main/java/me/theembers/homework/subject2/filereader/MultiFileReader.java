@@ -16,10 +16,18 @@ public class MultiFileReader implements FileReader {
      */
     private ExecutorService executorService;
 
-
+    /**
+     * 任务执行者
+     */
     private WorkHandler handler;
+    /**
+     * 读取器配置
+     */
     private ReaderConfig readerConfig;
 
+    /**
+     * 文件字节大小
+     */
     private long fileLength;
     private RandomAccessFile raFile;
     private Set<SegmentReaderTask.Point> segmentPoints;
@@ -41,6 +49,10 @@ public class MultiFileReader implements FileReader {
         segmentPoints = new HashSet<>();
     }
 
+
+    /**
+     * 执行
+     */
     @Override
     public final void execute() {
         // 初始化分段
@@ -63,7 +75,7 @@ public class MultiFileReader implements FileReader {
 
     /**
      * 初始化分段
-     * 根据文件长度 与 线程数 求出每个线程读取流段落长度
+     * 根据文件字节大小 与 线程数 求出每个线程需要读取的字节数
      */
     private final void initSegmentPoint() {
         long size = this.fileLength / this.readerConfig.getThreadSize();
@@ -75,6 +87,9 @@ public class MultiFileReader implements FileReader {
         }
     }
 
+    /**
+     * 关闭
+     */
     private void destroy() {
         try {
             this.raFile.close();
@@ -96,10 +111,10 @@ public class MultiFileReader implements FileReader {
             return;
         }
         SegmentReaderTask.Point point = new SegmentReaderTask.Point();
-        point.start = start;
+        point.setStart(start);
         long endPosition = start + size - 1;
         if (endPosition >= fileLength - 1) {
-            point.end = fileLength - 1;
+            point.setEnd(fileLength - 1);
             segmentPoints.add(point);
             return;
         }
@@ -115,10 +130,8 @@ public class MultiFileReader implements FileReader {
             raFile.seek(endPosition);
             tmp = (byte) raFile.read();
         }
-        point.end = endPosition;
+        point.setEnd(endPosition);
         segmentPoints.add(point);
-
         splitSegment(endPosition + 1, size);
-
     }
 }

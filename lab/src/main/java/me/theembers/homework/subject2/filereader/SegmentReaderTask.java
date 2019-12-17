@@ -34,6 +34,9 @@ public class SegmentReaderTask implements Runnable {
         this.countDownLatch = countDownLatch;
     }
 
+    /**
+     * 读取线程
+     */
     @Override
     public void run() {
         try {
@@ -75,7 +78,23 @@ public class SegmentReaderTask implements Runnable {
     }
 
     public static class Point {
-        public long start;
-        public long end;
+        private long start;
+        private long end;
+
+        public long getStart() {
+            return start;
+        }
+
+        public void setStart(long start) {
+            this.start = start;
+        }
+
+        public long getEnd() {
+            return end;
+        }
+
+        public void setEnd(long end) {
+            this.end = end;
+        }
     }
 }
