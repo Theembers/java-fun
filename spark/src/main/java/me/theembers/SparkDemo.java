@@ -1,5 +1,9 @@
 package me.theembers;
 
+import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.JavaSparkContext;
+
 /**
  * @author TheEmbers Guo
  * @version 1.0
