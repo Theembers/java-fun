@@ -17,7 +17,7 @@ public class CyclicBarrierDemo {
 
         final CyclicBarrier barrier = new CyclicBarrier(3, new BarrierThread());
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 50; i++) {
             new Thread(() -> {
                 try {
                     System.out.println(Thread.currentThread().getName() + " index: " + barrier.await());
