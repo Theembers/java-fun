@@ -43,7 +43,7 @@ public class ProgressServer {
 
         @Before(value = "progressEventCut() && @annotation(progressEvent)")
         public void doBefore(JoinPoint joinPoint, ProgressEvent progressEvent) throws Throwable {
-            String eventName = progressEvent.step().name();
+            String eventName = progressEvent.name();
             Object[] args = joinPoint.getArgs();
             eventName = ProgressbarUtil.buildEventName(args[0].toString(), eventName);
 
